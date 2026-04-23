@@ -1,6 +1,8 @@
 from logging.config import fileConfig
-from sqlalchemy import engine_from_config, pool
+
 from alembic import context
+from sqlalchemy import engine_from_config, pool
+
 from app.models import Base  # noqa: F401 — 确保所有模型被载入
 
 config = context.config
