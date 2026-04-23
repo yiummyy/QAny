@@ -1,8 +1,9 @@
 import logging
 import sys
-from typing import Any
+from collections.abc import Sequence
 
 import structlog
+from structlog.typing import Processor
 
 
 def configure_logging(level: str = "INFO", env: str = "dev") -> None:
@@ -18,13 +19,18 @@ def configure_logging(level: str = "INFO", env: str = "dev") -> None:
         stream=sys.stdout,
         level=log_level,
     )
-    shared_processors: list[Any] = [
+    json_renderer = (
+        structlog.processors.JSONRenderer(sort_keys=True)
+        if env == "prod"
+        else structlog.processors.JSONRenderer()
+    )
+    shared_processors: Sequence[Processor] = [
         structlog.contextvars.merge_contextvars,
         structlog.processors.add_log_level,
         structlog.processors.TimeStamper(fmt="iso", key="ts"),
         structlog.processors.StackInfoRenderer(),
-        structlog.processors.format_exc_info,
-        structlog.processors.JSONRenderer(),
+        structlog.processors.ExceptionRenderer(),
+        json_renderer,
     ]
     structlog.configure(
         processors=shared_processors,
