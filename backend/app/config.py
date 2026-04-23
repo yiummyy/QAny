@@ -1,4 +1,5 @@
 from functools import lru_cache
+from typing import Literal
 
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -27,9 +28,9 @@ class Settings(BaseSettings):
     deepseek_api_key: SecretStr | None = None
 
     # Runtime
-    data_dir: str = "/app/data"
-    log_level: str = "INFO"
-    environment: str = "dev"
+    data_dir: str = "data"
+    log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
+    environment: Literal["dev", "test", "prod"] = "dev"
 
 
 @lru_cache
