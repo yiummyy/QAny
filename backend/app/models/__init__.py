@@ -1,1 +1,3 @@
-from app.models.base import Base, TimestampMixin  # noqa: F401
+from app.models.base import Base, TimestampMixin
+
+__all__ = ["Base", "TimestampMixin"]
