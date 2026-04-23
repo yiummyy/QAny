@@ -1,6 +1,9 @@
 import subprocess
+import time
 
+import httpx
 import pytest
+from testcontainers.core.container import DockerContainer
 from testcontainers.postgres import PostgresContainer
 from testcontainers.redis import RedisContainer
 
@@ -44,3 +47,41 @@ def redis_url(redis_container):
     host = redis_container.get_container_host_ip()
     port = redis_container.get_exposed_port(6379)
     return f"redis://{host}:{port}/0"
+
+
+@pytest.fixture(scope="session")
+def es_container():
+    container = (
+        DockerContainer("infinilabs/elasticsearch-ik:8.11.0")
+        .with_env("discovery.type", "single-node")
+        .with_env("xpack.security.enabled", "false")
+        .with_env("ES_JAVA_OPTS", "-Xms512m -Xmx512m")
+        .with_exposed_ports(9200)
+    )
+    container.start()
+    try:
+        host = container.get_container_host_ip()
+        port = container.get_exposed_port(9200)
+        url = f"http://{host}:{port}"
+        # ES 冷启动最慢，等待 /_cluster/health 可达
+        deadline = time.time() + 120
+        while time.time() < deadline:
+            try:
+                r = httpx.get(f"{url}/_cluster/health", timeout=2.0)
+                if r.status_code == 200 and r.json().get("status") in ("green", "yellow"):
+                    break
+            except httpx.HTTPError:
+                pass
+            time.sleep(2)
+        else:
+            raise RuntimeError("elasticsearch container did not become healthy in 120s")
+        yield container
+    finally:
+        container.stop()
+
+
+@pytest.fixture(scope="session")
+def es_url(es_container):
+    host = es_container.get_container_host_ip()
+    port = es_container.get_exposed_port(9200)
+    return f"http://{host}:{port}"

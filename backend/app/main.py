@@ -7,6 +7,7 @@ from sqlalchemy import text
 
 from app.config import Settings, get_settings
 from app.logging_conf import configure_logging, get_logger
+from app.storage.es_client import close_es, get_es
 from app.storage.pg import dispose_engine, get_sessionmaker
 from app.storage.redis_client import close_redis, get_redis
 
@@ -22,6 +23,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
     try:
         yield
     finally:
+        await close_es()
         await close_redis()
         await dispose_engine()
 
@@ -42,14 +44,21 @@ async def _check_redis() -> str:
     return "ok" if pong else "down"
 
 
+async def _check_es() -> str:
+    async with asyncio.timeout(_PROBE_TIMEOUT_SECONDS):
+        info = await get_es().info()
+    return "ok" if "version" in info else "down"
+
+
 @app.get("/healthz")
 async def healthz(settings: Settings = Depends(get_settings)) -> dict[str, object]:  # noqa: B008
-    pg_result, redis_result = await asyncio.gather(
-        _check_pg(), _check_redis(), return_exceptions=True
+    pg_result, redis_result, es_result = await asyncio.gather(
+        _check_pg(), _check_redis(), _check_es(), return_exceptions=True
     )
     deps: dict[str, str] = {
         "pg": pg_result if isinstance(pg_result, str) else "down",
         "redis": redis_result if isinstance(redis_result, str) else "down",
+        "es": es_result if isinstance(es_result, str) else "down",
     }
     status = "ok" if all(v == "ok" for v in deps.values()) else "degraded"
     return {"status": status, "deps": deps, "env": settings.environment}
