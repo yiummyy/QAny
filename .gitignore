@@ -41,6 +41,10 @@ dist/
 .cache/
 coverage/
 .eslintcache
+# tsc -b build artifacts for Vite config
+*.tsbuildinfo
+frontend/vite.config.d.ts
+frontend/vite.config.js
 
 # ===== IDE & OS =====
 .vscode/
