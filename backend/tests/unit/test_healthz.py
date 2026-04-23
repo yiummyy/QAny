@@ -3,6 +3,7 @@ from httpx import ASGITransport, AsyncClient
 
 from app.main import app
 
+
 @pytest.mark.asyncio
 async def test_healthz_returns_ok_without_deps():
     """默认 /healthz 返回 200 + status=ok，不探测依赖（shallow mode）。"""
