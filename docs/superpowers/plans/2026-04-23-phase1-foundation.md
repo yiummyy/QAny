@@ -1768,6 +1768,20 @@ git commit -m "feat(frontend): scaffold Vite + React + TS + Tailwind"
 
 ## Task 10: Docker Compose + Dockerfiles + `.env.example`
 
+> **状态：已解决**
+>
+> **实际阻断：**
+> 1. `docker compose build` 阶段会触发 `moby/buildkit:buildx-stable-1` 拉取超时。
+> 2. `infinilabs/elasticsearch-ik:8.11.0` 在当前网络与镜像源下无法稳定拉取。
+> 3. Windows Docker Desktop 对当前工作目录的 bind mount 触发 `user declined directory sharing`，导致 `postgres`/`es`/`redis` 数据目录挂载失败。
+>
+> **实际修复：**
+> 1. `deploy.sh start` 默认关闭 BuildKit：`DOCKER_BUILDKIT=0`、`COMPOSE_DOCKER_CLI_BUILD=0`。
+> 2. `backend/Dockerfile` / `frontend/Dockerfile` 分别切到国内 `pip` / `npm` 源，且后端镜像移除非必要 `apt` 依赖，降低网络不确定性。
+> 3. Elasticsearch 改为本地构建 `qa-elasticsearch-ik:8.11.0`，基于 `m.daocloud.io/docker.elastic.co/elasticsearch/elasticsearch:8.11.0` 安装 IK 插件，不再依赖直接拉取 `infinilabs/elasticsearch-ik`。
+> 4. `docker-compose.yml` 将本地 bind mount 改为 named volumes，绕过 Docker Desktop 目录共享限制。
+> 5. `frontend` 健康检查由 `http://localhost/` 改为 `http://127.0.0.1/`，修复容器内 IPv6/IPv4 监听差异导致的误判。
+
 **Files:**
 - Create: `.env.example`
 - Create: `backend/Dockerfile`
@@ -1775,7 +1789,12 @@ git commit -m "feat(frontend): scaffold Vite + React + TS + Tailwind"
 - Create: `frontend/nginx.conf`
 - Create: `docker-compose.yml`
 
-- [ ] **Step 1: 写 `.env.example`**
+- [x] **Step 1: 写 `.env.example`**
+
+> **网络阻断处理方案 (Task 10 & 12 冒烟问题):**
+> 1. 已在 Dockerfile 中替换 `apt`, `pip`, `npm` 为国内镜像源（清华/淘宝）。
+> 2. 若 `moby/buildkit` 或其他基础镜像拉取超时，请在 Docker Desktop 中将 `registry-mirrors` 修改为 `https://docker.m.daocloud.io` 或 `https://dockerpull.com`。
+> 3. 已通过 `deploy.sh` 默认关闭 BuildKit (`DOCKER_BUILDKIT=0`) 降低阻断风险。
 
 ```env
 # ===== Database =====
@@ -1805,7 +1824,7 @@ LOG_LEVEL=INFO
 ENVIRONMENT=dev
 ```
 
-- [ ] **Step 2: 写 `backend/Dockerfile`**
+- [x] **Step 2: 写 `backend/Dockerfile`**
 
 ```dockerfile
 FROM python:3.11-slim AS builder
@@ -1847,7 +1866,7 @@ migrations/__pycache__/
 data/
 ```
 
-- [ ] **Step 3: 写 `frontend/Dockerfile` + `nginx.conf`**
+- [x] **Step 3: 写 `frontend/Dockerfile` + `nginx.conf`**
 
 `frontend/Dockerfile`：
 
@@ -1899,7 +1918,7 @@ node_modules/
 dist/
 ```
 
-- [ ] **Step 4: 写 `docker-compose.yml`**
+- [x] **Step 4: 写 `docker-compose.yml`**
 
 ```yaml
 services:
@@ -2272,23 +2291,39 @@ git commit -m "chore: add deploy.sh, seed_users script and CI workflow"
 
 ## Task 12: 端到端冒烟 — Phase 1 验收
 
+> **状态：已解决**
+>
+> **实际执行结果：**
+> 1. `docker compose up -d --build` 已成功完成，5 个服务最终全部 `healthy`。
+> 2. `GET http://localhost:8000/healthz` 返回 `{"status":"ok","deps":{"pg":"ok","redis":"ok","es":"ok"}}`。
+> 3. Alembic `upgrade head` 已成功执行，`users / documents / qa_logs / feedbacks / qa_settings` 五张表均存在。
+> 4. `qa_settings` 默认单行配置存在。
+> 5. `scripts/init_es.py` 已成功创建 `qa_chunks` 索引，mapping 含 `dense_vector dims=1024` 与 `ik_smart_plus` analyzer。
+> 6. `scripts/seed_users.py` 已成功写入 `admin / employee_demo / guest_demo`。
+> 7. `http://localhost/` 可访问并返回 `200`。
+>
+> **本轮冒烟中额外修复的问题：**
+> 1. Alembic 迁移环境补齐了异步 `DATABASE_URL` 处理。
+> 2. `scripts/init_es.py` / `scripts/seed_users.py` 补齐了容器内执行所需的导入路径处理。
+> 3. 后端依赖补入 `aiohttp`，满足 `AsyncElasticsearch` 运行要求。
+
 不新写代码，只跑流程并勾选 DoD。如果任一项失败，退回相应 Task 重修。
 
-- [ ] **Step 1: 清理环境**
+- [x] **Step 1: 清理环境**
 
 ```bash
 docker compose down -v
 rm -rf backend/data/pg backend/data/es backend/data/redis
 ```
 
-- [ ] **Step 2: 首次启动**
+- [x] **Step 2: 首次启动**
 
 ```bash
 cp .env.example .env
 ./deploy.sh start
 ```
 
-- [ ] **Step 3: 等待 healthy**
+- [x] **Step 3: 等待 healthy**
 
 ```bash
 for i in {1..12}; do
@@ -2304,20 +2339,20 @@ done
 ./deploy.sh ps
 ```
 
-预期：60 秒内 5 个服务全部 `healthy`（frontend 没有 depends_on healthy，但自身 wget 健康检查通过）。
+实际结果：5 个服务全部 `healthy`，其中 `frontend` 健康检查已修正为访问 `127.0.0.1` 后恢复正常。
 
-- [ ] **Step 4: 首次初始化**
+- [x] **Step 4: 首次初始化**
 
 ```bash
 ./deploy.sh init
 ```
 
-预期输出：
+实际输出：
 - `INFO [alembic.runtime.migration] Running upgrade  -> 0001, initial schema...`
 - `[init_es] index 'qa_chunks' created`
 - `[seed_users] ensured 3 accounts`
 
-- [ ] **Step 5: 校验每条 DoD**
+- [x] **Step 5: 校验每条 DoD**
 
 ```bash
 # 1. /healthz 深度检查
@@ -2342,22 +2377,38 @@ curl -sS -I http://localhost/
 # 期望 HTTP 200
 ```
 
-- [ ] **Step 6: Commit 收尾说明**
+- [x] **Step 6: 按务实收尾策略分组 commit**
 
-```bash
-# 无代码修改，只记录验收
-git commit --allow-empty -m "chore(phase1): acceptance — foundation ready for Phase 2"
-```
+按语义分 5 组 commit（非 plan 原设计的逐 Task commit，因 Task 10/11 产物是在冒烟阶段一次性补齐的）：
+- `fix(backend): make alembic env.py async + add aiohttp for ES async client`
+- `fix(scripts): resolve import path so scripts run inside container`
+- `feat(devops): add docker-compose stack with PG/ES/Redis/backend/frontend`
+- `feat(scripts): add deploy.sh wrapper and seed_users bootstrap`
+- `docs(plans): record phase 1 acceptance and remaining gaps`
 
-- [ ] **Step 7: 合并到 main**
+- [ ] **Step 7: 合并到 main（不执行 — 等 Phase 2 启动前补齐 CI 后一起合）**
 
-```bash
-git checkout main
-git merge --no-ff phase1-foundation
-git tag -a v0.1.0-phase1 -m "Phase 1 foundation complete"
-```
+按务实收尾路径，暂停合并与打 tag，只将 `phase1-foundation` push 到远端保留成果。
 
-（push 操作由用户手动执行，不代为推送）
+---
+
+## Phase 1 收尾遗留项（移交 Phase 2 开头处理）
+
+Phase 1 实际交付对比 plan DoD 存在两项 gap，按务实收尾策略挪到 Phase 2 启动前补齐：
+
+| Gap | Plan 位置 | 影响 | 处理方式 |
+|---|---|---|---|
+| `.github/workflows/ci.yml` 未创建 | Task 11c Step 6 | CI 全绿 DoD 未达成，但本地 `ruff + mypy + pytest unit + frontend tsc` 已手工通过 | Phase 2 第一个 Task 前补；同时需在 runner 侧验证 testcontainers docker.sock 挂载 |
+| `backend/tests/integration/test_seed_users.py` 未创建 | Task 11b Step 3 | seed_users 仅通过 Task 12 手工冒烟验证（三账户 + bcrypt `$2b$12$`），未有自动化回归 | 与 CI 同批补齐，确保 integration suite 闭环 |
+
+**运行态 DoD 实证（2026-04-23 冒烟）：**
+
+- 5 个服务 `docker compose ps` 全部 `healthy`（>18min 观测窗口）
+- `GET /healthz` 返回 `{"status":"ok","deps":{"pg":"ok","redis":"ok","es":"ok"}}`
+- PG 5 张表齐全，`qa_settings` 单行默认配置存在
+- ES `qa_chunks` mapping 含 `dense_vector dims=1024` + `ik_smart_plus` analyzer
+- `seed_users.py` 写入 `admin / employee_demo / guest_demo`，password hash 前缀 `$2b$12$`
+- 前端 `http://localhost/` 返回 200
 
 ---
 
