@@ -1,4 +1,5 @@
 from datetime import datetime
+from decimal import Decimal
 from typing import Any
 
 from sqlalchemy import DateTime, ForeignKey, Index, Integer, Numeric, String, Text
@@ -24,11 +25,11 @@ class QALog(Base):
     sources: Mapped[list[Any] | None] = mapped_column(JSONB, nullable=True)
     tools_called: Mapped[list[Any] | None] = mapped_column(JSONB, nullable=True)
     confidence: Mapped[str | None] = mapped_column(String(8), nullable=True)
-    confidence_score: Mapped[float | None] = mapped_column(Numeric(4, 3), nullable=True)
+    confidence_score: Mapped[Decimal | None] = mapped_column(Numeric(4, 3), nullable=True)
     input_tokens: Mapped[int | None] = mapped_column(Integer, nullable=True)
     output_tokens: Mapped[int | None] = mapped_column(Integer, nullable=True)
     model_name: Mapped[str | None] = mapped_column(String(32), nullable=True)
-    cost_rmb: Mapped[float | None] = mapped_column(Numeric(10, 4), nullable=True)
+    cost_rmb: Mapped[Decimal | None] = mapped_column(Numeric(10, 4), nullable=True)
     response_time_ms: Mapped[int | None] = mapped_column(Integer, nullable=True)
     status: Mapped[str] = mapped_column(String(16), nullable=False)
     error_code: Mapped[int | None] = mapped_column(Integer, nullable=True)
