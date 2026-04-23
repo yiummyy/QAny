@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+# 作者: GPT-5.4
+# 创建时间: 2026-04-20
+# 功能说明: hooks 统一入口包装器，负责定位 Python 并转发到 hook_entry.py。
+# 版本号: 1.0.0
+
+set -euo pipefail
+
+python_cmd=""
+if command -v python3 >/dev/null 2>&1; then
+    python_cmd="python3"
+elif command -v python >/dev/null 2>&1; then
+    python_cmd="python"
+fi
+
+if [ -z "$python_cmd" ]; then
+    if [ "${1:-}" = "feedback-memory" ]; then
+        echo "python is required" >&2
+        exit 1
+    fi
+    exit 0
+fi
+
+script_dir="$(cd "$(dirname "$0")" && pwd)"
+exec "$python_cmd" "${script_dir}/hook_entry.py" "$@"

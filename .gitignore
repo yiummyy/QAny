@@ -1,0 +1,81 @@
+# ===== Environment & Secrets =====
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets/
+
+# ===== Python (backend) =====
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+.venv/
+venv/
+env/
+ENV/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+.coverage.*
+htmlcov/
+.tox/
+dist/
+build/
+*.egg-info/
+*.egg
+pip-log.txt
+
+# ===== Node / Frontend =====
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+dist/
+.vite/
+.cache/
+coverage/
+.eslintcache
+
+# ===== IDE & OS =====
+.vscode/
+!.vscode/settings.json.example
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+
+# ===== Project Runtime Data (Harness SSOT & uploads) =====
+backend/data/sessions/
+backend/data/tasks/
+backend/data/uploads/
+backend/data/backups/
+backend/data/cache/
+
+# Allow .gitkeep placeholders to preserve empty dirs
+!backend/data/**/.gitkeep
+
+# ===== Docker volumes =====
+data/pg/
+data/es/
+data/redis/
+
+# ===== Logs =====
+logs/
+*.log
+
+# ===== Model weights (large binaries, download at deploy time) =====
+models/
+*.bin
+*.safetensors
+*.onnx
+
+# ===== Claude Code local overrides =====
+.claude/settings.local.json
