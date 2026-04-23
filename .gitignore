@@ -72,7 +72,7 @@ logs/
 *.log
 
 # ===== Model weights (large binaries, download at deploy time) =====
-models/
+/models/
 *.bin
 *.safetensors
 *.onnx
