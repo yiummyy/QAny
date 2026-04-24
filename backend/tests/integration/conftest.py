@@ -32,7 +32,7 @@ def pg_url(pg_container, monkeypatch_session):
     sync_url = raw.replace("psycopg2", "psycopg")
     subprocess.check_call(
         [sys.executable, "-m", "alembic", "-x", f"sqlalchemy.url={sync_url}", "upgrade", "head"],
-        cwd="backend",
+        cwd=".",
     )
     return url
 
