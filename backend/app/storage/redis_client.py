@@ -2,10 +2,10 @@ from redis.asyncio import Redis, from_url
 
 from app.config import get_settings
 
-_client: Redis | None = None
+_client: Redis | None = None  # type: ignore[type-arg]
 
 
-def get_redis() -> Redis:
+def get_redis() -> Redis:  # type: ignore[type-arg]
     global _client
     if _client is None:
         settings = get_settings()

@@ -60,8 +60,8 @@ module = ["jose.*"]
 ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
-module = ["redis.*"]
-disable_error_code = ["type-arg"]
+module = ["app.storage.redis_client"]
+warn_unused_ignores = false
 
 [tool.setuptools.packages.find]
 include = ["app*"]
