@@ -58,6 +58,9 @@ plugins = ["pydantic.mypy"]
 module = ["jose.*"]
 ignore_missing_imports = true
 
+[tool.setuptools.packages.find]
+include = ["app*"]
+
 [build-system]
 requires = ["setuptools>=68"]
 build-backend = "setuptools.build_meta"
