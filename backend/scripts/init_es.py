@@ -43,6 +43,34 @@ INDEX_BODY: dict = {
     },
 }
 
+_INDEX_BODY_STANDARD: dict = {
+    "settings": {
+        "number_of_shards": 1,
+        "number_of_replicas": 0,
+    },
+    "mappings": {
+        "properties": {
+            "chunk_id": {"type": "keyword"},
+            "doc_id": {"type": "keyword"},
+            "doc_name": {"type": "keyword"},
+            "chunk_index": {"type": "integer"},
+            "content": {"type": "text"},
+            "section": {"type": "keyword"},
+            "embedding": {
+                "type": "dense_vector",
+                "dims": 1024,
+                "similarity": "cosine",
+                "index": True,
+            },
+            "permission_level": {"type": "keyword"},
+            "department": {"type": "keyword"},
+            "source_type": {"type": "keyword"},
+            "updated_at": {"type": "date"},
+            "content_hash": {"type": "keyword"},
+        }
+    },
+}
+
 
 async def ensure_index() -> None:
     es = get_es()
@@ -50,8 +78,15 @@ async def ensure_index() -> None:
     if exists:
         print(f"[init_es] index '{INDEX_NAME}' already exists - skip")
         return
-    await es.indices.create(index=INDEX_NAME, body=INDEX_BODY)
-    print(f"[init_es] index '{INDEX_NAME}' created")
+    try:
+        await es.indices.create(index=INDEX_NAME, body=INDEX_BODY)
+        print(f"[init_es] index '{INDEX_NAME}' created (with IK analyzer)")
+    except Exception:
+        # IK analyzer plugin not available, fall back to standard
+        exists2 = await es.indices.exists(index=INDEX_NAME)
+        if not exists2:
+            await es.indices.create(index=INDEX_NAME, body=_INDEX_BODY_STANDARD)
+            print(f"[init_es] index '{INDEX_NAME}' created (standard analyzer, IK unavailable)")
 
 
 async def main() -> None:

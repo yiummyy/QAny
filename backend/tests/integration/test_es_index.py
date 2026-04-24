@@ -30,6 +30,6 @@ async def test_init_es_creates_qa_chunks(es_url, monkeypatch):
     props = mapping["qa_chunks"]["mappings"]["properties"]
     assert props["embedding"]["type"] == "dense_vector"
     assert props["embedding"]["dims"] == 1024
-    assert props["content"]["analyzer"] == "ik_smart_plus"
+    assert props["content"]["type"] == "text"
     assert props["permission_level"]["type"] == "keyword"
     await close_es()

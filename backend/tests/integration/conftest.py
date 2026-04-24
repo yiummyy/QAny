@@ -53,7 +53,7 @@ def redis_url(redis_container):
 @pytest.fixture(scope="session")
 def es_container():
     container = (
-        DockerContainer("infinilabs/elasticsearch-ik:8.11.0")
+        DockerContainer("elasticsearch:8.11.0")
         .with_env("discovery.type", "single-node")
         .with_env("xpack.security.enabled", "false")
         .with_env("ES_JAVA_OPTS", "-Xms512m -Xmx512m")
@@ -64,7 +64,6 @@ def es_container():
         host = container.get_container_host_ip()
         port = container.get_exposed_port(9200)
         url = f"http://{host}:{port}"
-        # ES 冷启动最慢，等待 /_cluster/health 可达
         deadline = time.time() + 120
         while time.time() < deadline:
             try:
