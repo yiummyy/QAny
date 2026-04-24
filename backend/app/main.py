@@ -6,6 +6,7 @@ from fastapi import Depends, FastAPI
 from sqlalchemy import text
 
 from app.config import Settings, get_settings
+from app.api.errors import install_exception_handlers
 from app.logging_conf import configure_logging, get_logger
 from app.storage.es_client import close_es, get_es
 from app.storage.pg import dispose_engine, get_sessionmaker
@@ -29,6 +30,7 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 
 app = FastAPI(title="Enterprise QA MVP", version="0.1.0", lifespan=lifespan)
+install_exception_handlers(app)
 
 
 async def _check_pg() -> str:
