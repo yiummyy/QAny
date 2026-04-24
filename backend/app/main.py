@@ -5,6 +5,9 @@ from contextlib import asynccontextmanager
 from fastapi import Depends, FastAPI
 from sqlalchemy import text
 
+from app.api.errors import install_exception_handlers
+from app.api.v1.admin import router as admin_router
+from app.api.v1.auth import router as auth_router
 from app.config import Settings, get_settings
 from app.logging_conf import configure_logging, get_logger
 from app.storage.es_client import close_es, get_es
@@ -29,6 +32,9 @@ async def lifespan(app: FastAPI) -> AsyncIterator[None]:
 
 
 app = FastAPI(title="Enterprise QA MVP", version="0.1.0", lifespan=lifespan)
+install_exception_handlers(app)
+app.include_router(auth_router)
+app.include_router(admin_router)
 
 
 async def _check_pg() -> str:

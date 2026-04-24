@@ -1,4 +1,5 @@
 import subprocess
+import sys
 import time
 
 import httpx
@@ -30,7 +31,7 @@ def pg_url(pg_container, monkeypatch_session):
     # Alembic needs a sync URL
     sync_url = raw.replace("psycopg2", "psycopg")
     subprocess.check_call(
-        ["alembic", "-x", f"sqlalchemy.url={sync_url}", "upgrade", "head"],
+        [sys.executable, "-m", "alembic", "-x", f"sqlalchemy.url={sync_url}", "upgrade", "head"],
         cwd="backend",
     )
     return url
