@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from fastapi import APIRouter, Depends, HTTPException, Response, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
@@ -80,7 +80,7 @@ async def login(body: LoginRequest, session: AsyncSession = Depends(get_db)) -> 
     try:
         await ensure_not_blocked(body.username)
     except LoginBlocked as blocked:
-        raise _rate_limited(blocked.retry_after)
+        raise _rate_limited(blocked.retry_after) from blocked
 
     user = await get_by_username(session, body.username)
 
@@ -131,7 +131,7 @@ async def refresh(
     try:
         payload = decode_token(credentials.credentials, expected_type=TokenType.REFRESH)
     except JWTError:
-        raise _unauthorized(40101, "Refresh token 失效")
+        raise _unauthorized(40101, "Refresh token 失效") from None
 
     if await is_revoked(payload["jti"]):
         raise _unauthorized(40101, "Token 已登出")
@@ -166,7 +166,7 @@ async def logout(
         raise _unauthorized(40101, "Token 失效")
 
     exp = int(payload["exp"])
-    now = int(datetime.now(timezone.utc).timestamp())
+    now = int(datetime.now(UTC).timestamp())
     jti = payload["jti"]
 
     await revoke(jti=jti, ttl_seconds=exp - now)

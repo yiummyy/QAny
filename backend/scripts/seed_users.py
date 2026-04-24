@@ -3,7 +3,7 @@
 import asyncio
 import sys
 import uuid
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 from pathlib import Path
 
 import bcrypt
@@ -66,7 +66,7 @@ async def seed() -> None:
                     "role": user["role"],
                     "permission_level": user["permission_level"],
                     "department": user["department"],
-                    "created_at": datetime.now(timezone.utc),
+                    "created_at": datetime.now(UTC),
                 },
             )
     print(f"[seed_users] ensured {len(SEED_USERS)} accounts")

@@ -55,7 +55,7 @@ async def pop_pair(jti: str) -> str | None:
     Returns None if no pair is registered (or already popped).
     """
     r = get_redis()
-    partner = await r.get(_pair_key(jti))
+    partner: str | None = await r.get(_pair_key(jti))
     if partner is None:
         return None
     pipe = r.pipeline()

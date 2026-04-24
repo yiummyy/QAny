@@ -13,11 +13,11 @@ router = APIRouter(prefix="/api/v1/admin", tags=["admin"])
 
 
 @router.get("/ping")
-async def admin_ping(claims: UserClaims = Depends(require_admin)) -> dict:
+async def admin_ping(claims: UserClaims = Depends(require_admin)) -> dict[str, object]:
     return {"pong": True, "caller": claims.username}
 
 
 @router.get("/whoami")
-async def whoami(claims: UserClaims = Depends(require_any_user)) -> dict:
+async def whoami(claims: UserClaims = Depends(require_any_user)) -> dict[str, object]:
     """Any authenticated user (guest/employee/admin) can hit this."""
     return {"role": claims.role.value, "pl": claims.pl}

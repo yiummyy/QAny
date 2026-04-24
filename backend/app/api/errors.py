@@ -83,6 +83,6 @@ async def _unhandled_exception_handler(request: Request, exc: Exception) -> JSON
 
 
 def install_exception_handlers(app: FastAPI) -> None:
-    app.add_exception_handler(HTTPException, _http_exception_handler)
-    app.add_exception_handler(RequestValidationError, _validation_exception_handler)
+    app.add_exception_handler(HTTPException, _http_exception_handler)  # type: ignore[arg-type]
+    app.add_exception_handler(RequestValidationError, _validation_exception_handler)  # type: ignore[arg-type]
     app.add_exception_handler(Exception, _unhandled_exception_handler)

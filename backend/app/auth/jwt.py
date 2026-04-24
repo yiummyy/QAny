@@ -12,8 +12,8 @@ an HTTP stack.
 from __future__ import annotations
 
 import secrets
-from datetime import datetime, timedelta, timezone
-from enum import Enum
+from datetime import UTC, datetime, timedelta
+from enum import StrEnum
 from typing import Any
 
 from jose import jwt
@@ -23,7 +23,7 @@ from app.config import get_settings
 _ALGORITHM = "HS256"
 
 
-class TokenType(str, Enum):
+class TokenType(StrEnum):
     ACCESS = "access"
     REFRESH = "refresh"
 
@@ -47,7 +47,7 @@ def create_access_token(
 ) -> tuple[str, str]:
     """Return (access_token, jti)."""
     settings = get_settings()
-    iat = now or datetime.now(timezone.utc)
+    iat = now or datetime.now(UTC)
     exp = iat + timedelta(seconds=settings.jwt_access_ttl_seconds)
     jti = _new_jti()
     payload: dict[str, Any] = {
@@ -72,7 +72,7 @@ def create_refresh_token(
 ) -> tuple[str, str]:
     """Return (refresh_token, jti). Refresh carries only sub+jti."""
     settings = get_settings()
-    iat = now or datetime.now(timezone.utc)
+    iat = now or datetime.now(UTC)
     exp = iat + timedelta(seconds=settings.jwt_refresh_ttl_seconds)
     jti = _new_jti()
     payload: dict[str, Any] = {

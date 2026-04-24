@@ -34,7 +34,7 @@ async def get_current_user(
     try:
         payload = decode_token(credentials.credentials, expected_type=TokenType.ACCESS)
     except JWTError:
-        raise _auth_error(40101, "Token 失效")
+        raise _auth_error(40101, "Token 失效") from None
 
     if await is_revoked(payload["jti"]):
         raise _auth_error(40101, "Token 已登出")
@@ -46,7 +46,7 @@ async def get_current_user(
     return UserClaims.from_jwt_payload(payload)
 
 
-def require_role(*allowed: str):
+def require_role(*allowed: str):  # type: ignore[no-untyped-def]
     """Factory dependency — allow only the listed roles."""
     allowed_set = {Role(r) for r in allowed}
 

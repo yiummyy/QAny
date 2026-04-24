@@ -2,13 +2,13 @@
 
 from __future__ import annotations
 
-from enum import Enum
+from enum import StrEnum
 from typing import Any, Literal
 
 from pydantic import BaseModel, ConfigDict, Field
 
 
-class Role(str, Enum):
+class Role(StrEnum):
     ADMIN = "admin"
     EMPLOYEE = "employee"
     GUEST = "guest"
@@ -34,7 +34,7 @@ class UserClaims(BaseModel):
         return self.role is Role.ADMIN
 
     @classmethod
-    def from_jwt_payload(cls, payload: dict[str, Any]) -> "UserClaims":
+    def from_jwt_payload(cls, payload: dict[str, Any]) -> UserClaims:
         """Only call with *access-token* payloads.
 
         Refresh tokens do NOT contain `username/role/pl/dept` (Spec §5.1

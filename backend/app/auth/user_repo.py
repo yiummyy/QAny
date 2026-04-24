@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -22,6 +22,6 @@ async def touch_last_login(session: AsyncSession, *, user_id: str) -> None:
     stmt = (
         update(User)
         .where(User.user_id == user_id)
-        .values(last_login_at=datetime.now(timezone.utc))
+        .values(last_login_at=datetime.now(UTC))
     )
     await session.execute(stmt)
