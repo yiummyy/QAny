@@ -1,11 +1,13 @@
+from typing import Any
+
 from redis.asyncio import Redis, from_url
 
 from app.config import get_settings
 
-_client: Redis | None = None
+_client: Redis[Any] | None = None
 
 
-def get_redis() -> Redis:
+def get_redis() -> Redis[Any]:
     global _client
     if _client is None:
         settings = get_settings()
@@ -21,5 +23,5 @@ def get_redis() -> Redis:
 async def close_redis() -> None:
     global _client
     if _client is not None:
-        await _client.aclose()
+        await _client.close()
         _client = None
