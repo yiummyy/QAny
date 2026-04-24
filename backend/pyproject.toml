@@ -59,6 +59,10 @@ plugins = ["pydantic.mypy"]
 module = ["jose.*"]
 ignore_missing_imports = true
 
+[[tool.mypy.overrides]]
+module = ["redis.*"]
+disable_error_code = ["type-arg"]
+
 [tool.setuptools.packages.find]
 include = ["app*"]
 
