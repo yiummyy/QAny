@@ -86,4 +86,6 @@ logs/
 *.onnx
 
 # ===== Claude Code local overrides =====
+.claude/
 .claude/settings.local.json
+CLAUDE.md
