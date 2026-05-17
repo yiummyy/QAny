@@ -1,0 +1,294 @@
+{
+  "annotations": {
+    "list": []
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": null,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0},
+      "id": 100,
+      "panels": [],
+      "title": "Overview",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "palette-classic"},
+          "mappings": [],
+          "thresholds": {"mode": "absolute", "steps": [{"color": "green", "value": null}]},
+          "unit": "reqps"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 6, "x": 0, "y": 1},
+      "id": 1,
+      "options": {
+        "legend": {"displayMode": "list", "placement": "bottom"},
+        "tooltip": {"mode": "single"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "rate(http_requests_total[1m])",
+          "legendFormat": "{{method}} {{path}}",
+          "refId": "A"
+        }
+      ],
+      "title": "QPS (1m rate)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+      "fieldConfig": {
+        "defaults": {
+          "color": {"mode": "thresholds"},
+          "mappings": [],
+          "max": 100,
+          "min": 0,
+          "thresholds": {"mode": "absolute", "steps": [
+            {"color": "red", "value": null},
+            {"color": "yellow", "value": 95},
+            {"color": "green", "value": 99}
+          ]},
+          "unit": "percent"
+        },
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 4, "x": 6, "y": 1},
+      "id": 2,
+      "options": {
+        "orientation": "auto",
+        "reduceOptions": {"values": false, "calcs": ["lastNotNull"]}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "sum(rate(http_requests_total{status=~\"2..\"}[5m])) / sum(rate(http_requests_total[5m])) * 100",
+          "refId": "A"
+        }
+      ],
+      "title": "Success Rate",
+      "type": "gauge"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+      "fieldConfig": {
+        "defaults": {"unit": "s", "mappings": []},
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 7, "x": 10, "y": 1},
+      "id": 3,
+      "options": {
+        "legend": {"displayMode": "table", "placement": "right", "calcs": ["mean", "max"]},
+        "tooltip": {"mode": "single"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "histogram_quantile(0.50, rate(http_request_duration_seconds_bucket[5m]))",
+          "legendFormat": "P50",
+          "refId": "A"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "histogram_quantile(0.95, rate(http_request_duration_seconds_bucket[5m]))",
+          "legendFormat": "P95",
+          "refId": "B"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "histogram_quantile(0.99, rate(http_request_duration_seconds_bucket[5m]))",
+          "legendFormat": "P99",
+          "refId": "C"
+        }
+      ],
+      "title": "HTTP Request Latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+      "fieldConfig": {
+        "defaults": {"unit": "short", "mappings": []},
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 7, "x": 17, "y": 1},
+      "id": 4,
+      "options": {
+        "legend": {"displayMode": "list", "placement": "bottom"},
+        "tooltip": {"mode": "multi"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "rate(qa_fallback_total[5m])",
+          "legendFormat": "{{reason}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Fallback Rate (5m)",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 9},
+      "id": 200,
+      "panels": [],
+      "title": "LLM & Cost",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+      "fieldConfig": {
+        "defaults": {"unit": "short", "mappings": []},
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 10},
+      "id": 5,
+      "options": {
+        "legend": {"displayMode": "table", "placement": "right"},
+        "tooltip": {"mode": "multi"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "rate(qa_llm_tokens_total{direction=\"input\"}[5m])",
+          "legendFormat": "Input tokens/s",
+          "refId": "A"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "rate(qa_llm_tokens_total{direction=\"output\"}[5m])",
+          "legendFormat": "Output tokens/s",
+          "refId": "B"
+        }
+      ],
+      "title": "Token Throughput",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+      "fieldConfig": {
+        "defaults": {"unit": "cny", "mappings": []},
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 10},
+      "id": 6,
+      "options": {
+        "legend": {"displayMode": "table", "placement": "right"},
+        "tooltip": {"mode": "single"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "rate(qa_llm_cost_rmb_total[5m])",
+          "legendFormat": "Cost rate (¥/s)",
+          "refId": "A"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "qa_llm_cost_rmb_total",
+          "legendFormat": "Cumulative (¥)",
+          "refId": "B"
+        }
+      ],
+      "title": "LLM Cost",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+      "fieldConfig": {
+        "defaults": {"unit": "s", "mappings": []},
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 10},
+      "id": 7,
+      "options": {
+        "legend": {"displayMode": "table", "placement": "right"},
+        "tooltip": {"mode": "single"}
+      },
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "histogram_quantile(0.95, rate(qa_tool_duration_seconds_bucket[5m]))",
+          "legendFormat": "{{tool}} P95",
+          "refId": "A"
+        }
+      ],
+      "title": "Tool Duration P95",
+      "type": "timeseries"
+    },
+    {
+      "collapsed": false,
+      "gridPos": {"h": 1, "w": 24, "x": 0, "y": 18},
+      "id": 300,
+      "panels": [],
+      "title": "Quality",
+      "type": "row"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+      "fieldConfig": {
+        "defaults": {"unit": "short", "mappings": []},
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 0, "y": 19},
+      "id": 8,
+      "options": {"legend": {"displayMode": "table", "placement": "right"}},
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "rate(qa_confidence_bucket_bucket[10m])",
+          "legendFormat": "{{le}}",
+          "refId": "A"
+        }
+      ],
+      "title": "Confidence Distribution",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+      "fieldConfig": {
+        "defaults": {"unit": "short", "mappings": []},
+        "overrides": []
+      },
+      "gridPos": {"h": 8, "w": 12, "x": 12, "y": 19},
+      "id": 9,
+      "options": {"legend": {"displayMode": "list", "placement": "bottom"}},
+      "targets": [
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "rate(http_requests_total{status=~\"4..\"}[5m])",
+          "legendFormat": "4xx errors",
+          "refId": "A"
+        },
+        {
+          "datasource": {"type": "prometheus", "uid": "qa-prometheus"},
+          "expr": "rate(http_requests_total{status=~\"5..\"}[5m])",
+          "legendFormat": "5xx errors",
+          "refId": "B"
+        }
+      ],
+      "title": "Error Rate by Status",
+      "type": "timeseries"
+    }
+  ],
+  "refresh": "10s",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": ["qa-mvp", "enterprise"],
+  "templating": {"list": []},
+  "time": {"from": "now-15m", "to": "now"},
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Enterprise QA MVP Overview",
+  "uid": "qa-mvp-overview",
+  "version": 1
+}

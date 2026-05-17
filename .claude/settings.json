@@ -1,0 +1,96 @@
+{
+  "permissions": {
+    "allowedTools": [
+      "Read",
+      "Write",
+      "Edit",
+      "Bash",
+      "Glob",
+      "Grep"
+    ],
+    "deniedTools": [],
+    "allowedCommands": [
+      "npm run *",
+      "npm test",
+      "npm install",
+      "npx *",
+      "yarn run *",
+      "yarn test",
+      "yarn add *",
+      "pnpm run *",
+      "pnpm test",
+      "pnpm add *",
+      "bun run *",
+      "bun test",
+      "git status",
+      "git diff *",
+      "git log *",
+      "git add *",
+      "git commit *",
+      "git branch *",
+      "git checkout *",
+      "git switch *",
+      "git stash *",
+      "node *",
+      "tsx *",
+      "python *",
+      "cargo test *",
+      "cargo build *",
+      "go test *",
+      "go build *",
+      "make *"
+    ],
+    "deniedCommands": [
+      "rm -rf /",
+      "rm -rf /*",
+      "sudo rm -rf *",
+      "git push --force",
+      "git push -f",
+      "git reset --hard",
+      "git clean -fd",
+      "docker system prune -a",
+      "docker rm -f *",
+      "DROP DATABASE *",
+      "DROP TABLE *",
+      "TRUNCATE *",
+      "npm publish",
+      "yarn publish",
+      ":(){:|:&};:",
+      "mkfs *",
+      "dd if=*",
+      "DELETE FROM *"
+    ]
+  },
+  "behavior": {
+    "autoFormat": false,
+    "autoLint": false,
+    "autoTest": false,
+    "commitStyle": "freeform"
+  },
+  "showThinkingSummaries": true,
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "& (Join-Path $env:CLAUDE_PROJECT_DIR '.claude\\hooks\\run-hook.cmd') drain"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "shell": "powershell",
+            "command": "$tmp = [System.IO.Path]::GetTempFileName(); try { [System.IO.File]::WriteAllText($tmp, [Console]::In.ReadToEnd(), (New-Object System.Text.UTF8Encoding($false))); & (Join-Path $env:CLAUDE_PROJECT_DIR '.claude\\hooks\\run-hook.cmd') submit $tmp } finally { Remove-Item $tmp -ErrorAction SilentlyContinue }"
+          }
+        ]
+      }
+    ]
+  }
+}

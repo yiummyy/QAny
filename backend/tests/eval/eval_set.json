@@ -1,0 +1,70 @@
+{
+  "meta": {
+    "version": "1.0",
+    "created": "2026-04-25",
+    "total": 50,
+    "scenes": {
+      "policy": "制度查询",
+      "process": "流程指引",
+      "product": "产品知识",
+      "troubleshoot": "故障排查",
+      "training": "培训学习"
+    }
+  },
+  "items": [
+    {"id":"eval_001","scene":"policy","question":"公司年假制度是怎样的？","expected_answer_keywords":["年假","工龄","天数","申请"],"relevant_doc_ids":["doc_handbook"],"min_sources":1},
+    {"id":"eval_002","scene":"policy","question":"加班费如何计算？","expected_answer_keywords":["加班","工资","小时","1.5","倍"],"relevant_doc_ids":["doc_handbook"],"min_sources":1},
+    {"id":"eval_003","scene":"policy","question":"出差报销标准是什么？","expected_answer_keywords":["出差","报销","标准","住宿","交通"],"relevant_doc_ids":["doc_reimbursement"],"min_sources":1},
+    {"id":"eval_004","scene":"policy","question":"员工社保缴纳比例是多少？","expected_answer_keywords":["社保","养老","医疗","公积金","比例"],"relevant_doc_ids":["doc_handbook"],"min_sources":1},
+    {"id":"eval_005","scene":"policy","question":"公司病假扣薪标准？","expected_answer_keywords":["病假","工资","扣除","医院","证明"],"relevant_doc_ids":["doc_handbook"],"min_sources":1},
+    {"id":"eval_006","scene":"policy","question":"婚假可以休多少天？","expected_answer_keywords":["婚假","天数","结婚","申请"],"relevant_doc_ids":["doc_handbook"],"min_sources":1},
+    {"id":"eval_007","scene":"policy","question":"产假和陪产假政策？","expected_answer_keywords":["产假","陪产假","天数","工资"],"relevant_doc_ids":["doc_handbook"],"min_sources":1},
+    {"id":"eval_008","scene":"policy","question":"年终奖发放规则？","expected_answer_keywords":["年终奖","绩效","发放","月份"],"relevant_doc_ids":["doc_compensation"],"min_sources":1},
+    {"id":"eval_009","scene":"policy","question":"试用期工资怎么算？","expected_answer_keywords":["试用期","工资","80%","转正"],"relevant_doc_ids":["doc_handbook"],"min_sources":1},
+    {"id":"eval_010","scene":"policy","question":"调休假的使用规则？","expected_answer_keywords":["调休","加班","补休","有效期"],"relevant_doc_ids":["doc_handbook"],"min_sources":1},
+
+    {"id":"eval_011","scene":"process","question":"新员工入职需要办理哪些手续？","expected_answer_keywords":["入职","合同","身份证","银行卡","签"],"relevant_doc_ids":["doc_onboarding"],"min_sources":1},
+    {"id":"eval_012","scene":"process","question":"离职流程是怎样的？","expected_answer_keywords":["离职","申请","交接","审批","证明"],"relevant_doc_ids":["doc_offboarding"],"min_sources":1},
+    {"id":"eval_013","scene":"process","question":"如何申请转正？","expected_answer_keywords":["转正","申请","试用期","评估","审批"],"relevant_doc_ids":["doc_onboarding"],"min_sources":1},
+    {"id":"eval_014","scene":"process","question":"部门调岗需要什么条件？","expected_answer_keywords":["调岗","申请","部门","面试","审批"],"relevant_doc_ids":["doc_handbook"],"min_sources":1},
+    {"id":"eval_015","scene":"process","question":"请假审批需要谁批准？","expected_answer_keywords":["请假","审批","直属","上级","天数"],"relevant_doc_ids":["doc_handbook"],"min_sources":1},
+    {"id":"eval_016","scene":"process","question":"报销单提交后多久到账？","expected_answer_keywords":["报销","到账","财务","审核","工作日"],"relevant_doc_ids":["doc_reimbursement"],"min_sources":1},
+    {"id":"eval_017","scene":"process","question":"如何申请办公用品？","expected_answer_keywords":["办公用品","申请","采购","审批","领用"],"relevant_doc_ids":["doc_admin"],"min_sources":1},
+    {"id":"eval_018","scene":"process","question":"IT设备申领流程？","expected_answer_keywords":["设备","电脑","申请","IT","审批"],"relevant_doc_ids":["doc_admin"],"min_sources":1},
+    {"id":"eval_019","scene":"process","question":"公章使用申请流程？","expected_answer_keywords":["公章","用印","申请","审批","登记"],"relevant_doc_ids":["doc_admin"],"min_sources":1},
+    {"id":"eval_020","scene":"process","question":"访客预约登记流程？","expected_answer_keywords":["访客","预约","登记","接待","安全"],"relevant_doc_ids":["doc_admin"],"min_sources":1},
+
+    {"id":"eval_021","scene":"product","question":"企业版和个人版有什么区别？","expected_answer_keywords":["企业版","个人版","功能","价格","差异"],"relevant_doc_ids":["doc_product_spec"],"min_sources":1},
+    {"id":"eval_022","scene":"product","question":"产品定价策略是怎样的？","expected_answer_keywords":["定价","套餐","费用","许可","年费"],"relevant_doc_ids":["doc_product_spec"],"min_sources":1},
+    {"id":"eval_023","scene":"product","question":"最新版本有什么新功能？","expected_answer_keywords":["版本","更新","功能","升级","特性"],"relevant_doc_ids":["doc_product_spec"],"min_sources":1},
+    {"id":"eval_024","scene":"product","question":"软件支持哪些操作系统？","expected_answer_keywords":["支持","Windows","macOS","Linux","系统"],"relevant_doc_ids":["doc_product_spec"],"min_sources":1},
+    {"id":"eval_025","scene":"product","question":"API 接口支持哪些语言？","expected_answer_keywords":["API","接口","SDK","Python","Java"],"relevant_doc_ids":["doc_product_spec"],"min_sources":1},
+    {"id":"eval_026","scene":"product","question":"许可证到期后如何续费？","expected_answer_keywords":["许可证","续费","到期","更新"],"relevant_doc_ids":["doc_product_spec"],"min_sources":1},
+    {"id":"eval_027","scene":"product","question":"产品的 SLA 保障是多少？","expected_answer_keywords":["SLA","可用性","99","保障","服务"],"relevant_doc_ids":["doc_product_spec"],"min_sources":1},
+    {"id":"eval_028","scene":"product","question":"是否支持私有化部署？","expected_answer_keywords":["私有化","部署","本地","服务器"],"relevant_doc_ids":["doc_product_spec"],"min_sources":1},
+    {"id":"eval_029","scene":"product","question":"数据安全认证有哪些？","expected_answer_keywords":["安全","认证","ISO","等保","加密"],"relevant_doc_ids":["doc_product_spec"],"min_sources":1},
+    {"id":"eval_030","scene":"product","question":"客户成功案例有哪些？","expected_answer_keywords":["案例","客户","成功","行业","方案"],"relevant_doc_ids":["doc_product_spec"],"min_sources":1},
+
+    {"id":"eval_031","scene":"troubleshoot","question":"系统登录报错 500 怎么办？","expected_answer_keywords":["登录","500","错误","服务","重启"],"relevant_doc_ids":["doc_troubleshooting"],"min_sources":1},
+    {"id":"eval_032","scene":"troubleshoot","question":"忘记密码如何重置？","expected_answer_keywords":["忘记密码","重置","邮箱","验证","管理员"],"relevant_doc_ids":["doc_troubleshooting"],"min_sources":1},
+    {"id":"eval_033","scene":"troubleshoot","question":"网络连接超时怎么排查？","expected_answer_keywords":["网络","超时","连接","ping","防火墙"],"relevant_doc_ids":["doc_troubleshooting"],"min_sources":1},
+    {"id":"eval_034","scene":"troubleshoot","question":"文件上传失败的原因？","expected_answer_keywords":["上传","失败","格式","大小","权限"],"relevant_doc_ids":["doc_troubleshooting"],"min_sources":1},
+    {"id":"eval_035","scene":"troubleshoot","question":"数据库连接池耗尽如何处理？","expected_answer_keywords":["数据库","连接池","连接","重启","配置"],"relevant_doc_ids":["doc_troubleshooting"],"min_sources":1},
+    {"id":"eval_036","scene":"troubleshoot","question":"打印机无法工作怎么办？","expected_answer_keywords":["打印机","驱动","连接","重启","纸张"],"relevant_doc_ids":["doc_troubleshooting"],"min_sources":1},
+    {"id":"eval_037","scene":"troubleshoot","question":"VPN 连接不上怎么解决？","expected_answer_keywords":["VPN","连接","客户端","账号","网络"],"relevant_doc_ids":["doc_troubleshooting"],"min_sources":1},
+    {"id":"eval_038","scene":"troubleshoot","question":"邮件收不到怎么排查？","expected_answer_keywords":["邮件","收不到","垃圾","白名单","服务器"],"relevant_doc_ids":["doc_troubleshooting"],"min_sources":1},
+    {"id":"eval_039","scene":"troubleshoot","question":"权限不足无法访问怎么办？","expected_answer_keywords":["权限","访问","申请","管理员","角色"],"relevant_doc_ids":["doc_troubleshooting"],"min_sources":1},
+    {"id":"eval_040","scene":"troubleshoot","question":"蓝屏错误如何恢复？","expected_answer_keywords":["蓝屏","重启","安全模式","驱动","硬件"],"relevant_doc_ids":["doc_troubleshooting"],"min_sources":1},
+
+    {"id":"eval_041","scene":"training","question":"新员工入职培训有哪些内容？","expected_answer_keywords":["入职培训","公司介绍","制度","安全","试用期"],"relevant_doc_ids":["doc_training"],"min_sources":1},
+    {"id":"eval_042","scene":"training","question":"网络安全培训需要多久完成？","expected_answer_keywords":["安全培训","网络安全","必修","时间","考核"],"relevant_doc_ids":["doc_training"],"min_sources":1},
+    {"id":"eval_043","scene":"training","question":"专业技能认证怎么考？","expected_answer_keywords":["认证","考试","报名","费用","证书"],"relevant_doc_ids":["doc_training"],"min_sources":1},
+    {"id":"eval_044","scene":"training","question":"公司内部培训课程怎么报名？","expected_answer_keywords":["培训","课程","报名","内部","名额"],"relevant_doc_ids":["doc_training"],"min_sources":1},
+    {"id":"eval_045","scene":"training","question":"培训费用报销流程？","expected_answer_keywords":["培训","费用","报销","发票","审批"],"relevant_doc_ids":["doc_training"],"min_sources":1},
+    {"id":"eval_046","scene":"training","question":"导师制度的导师如何分配？","expected_answer_keywords":["导师","分配","新员工","一对一","指导"],"relevant_doc_ids":["doc_training"],"min_sources":1},
+    {"id":"eval_047","scene":"training","question":"管理培训有哪些课程？","expected_answer_keywords":["管理","培训","领导力","沟通","团队"],"relevant_doc_ids":["doc_training"],"min_sources":1},
+    {"id":"eval_048","scene":"training","question":"外部培训申请流程？","expected_answer_keywords":["外部","培训","申请","预算","审批"],"relevant_doc_ids":["doc_training"],"min_sources":1},
+    {"id":"eval_049","scene":"training","question":"在线学习平台怎么使用？","expected_answer_keywords":["在线","学习","平台","账号","课程"],"relevant_doc_ids":["doc_training"],"min_sources":1},
+    {"id":"eval_050","scene":"training","question":"培训学分要求是多少？","expected_answer_keywords":["学分","培训","年度","必修","选修"],"relevant_doc_ids":["doc_training"],"min_sources":1}
+  ]
+}

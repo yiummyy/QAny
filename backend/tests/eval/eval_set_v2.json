@@ -1,0 +1,253 @@
+{
+  "meta": {
+    "version": "2.0",
+    "created": "2026-05-06",
+    "total": 50,
+    "description": "扩展标注数据集 — 新增 relevance_judgments（chunk/doc 级相关性评分）、ground_truth_answer（标准答案）、must_contain/must_not_contain（事实检查项）",
+    "note": "relevance_judgments 按 doc_id 为 key（0=无关 1=弱相关 2=相关 3=高度相关），chunk_id 维度请在索引文档后替换为实际 chunk_id",
+    "scenes": {
+      "policy": "制度查询",
+      "process": "流程指引",
+      "product": "产品知识",
+      "troubleshoot": "故障排查",
+      "training": "培训学习"
+    }
+  },
+  "items": [
+    {
+      "id": "eval_001",
+      "scene": "policy",
+      "question": "公司年假制度是怎样的？",
+      "expected_answer_keywords": ["年假", "工龄", "天数", "申请"],
+      "relevant_doc_ids": ["doc_handbook"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_handbook": 3,
+        "doc_compensation": 1,
+        "doc_offboarding": 0
+      },
+      "ground_truth_answer": "员工工龄1-10年享5天年假，10-20年享10天，20年以上享15天。需提前一周申请，经直属上级审批。",
+      "must_contain": ["工龄", "年假", "天数", "申请"],
+      "must_not_contain": ["病假", "产假"],
+      "index": ""
+    },
+    {
+      "id": "eval_002",
+      "scene": "policy",
+      "question": "加班费如何计算？",
+      "expected_answer_keywords": ["加班", "工资", "小时", "1.5", "倍"],
+      "relevant_doc_ids": ["doc_handbook"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_handbook": 3,
+        "doc_compensation": 2,
+        "doc_reimbursement": 0
+      },
+      "ground_truth_answer": "工作日加班按1.5倍小时工资计算，周末加班按2倍计算，法定节假日按3倍计算。加班需提前报批。",
+      "must_contain": ["加班", "工资", "1.5", "倍"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_003",
+      "scene": "policy",
+      "question": "出差报销标准是什么？",
+      "expected_answer_keywords": ["出差", "报销", "标准", "住宿", "交通"],
+      "relevant_doc_ids": ["doc_reimbursement"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_reimbursement": 3,
+        "doc_handbook": 1
+      },
+      "ground_truth_answer": "国内出差住宿标准一线城市500元/晚，其他城市350元/晚；交通按实际发生凭票报销；餐饮补贴100元/天。",
+      "must_contain": ["出差", "报销", "住宿"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_004",
+      "scene": "policy",
+      "question": "员工社保缴纳比例是多少？",
+      "expected_answer_keywords": ["社保", "养老", "医疗", "公积金", "比例"],
+      "relevant_doc_ids": ["doc_handbook"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_handbook": 3,
+        "doc_compensation": 2
+      },
+      "ground_truth_answer": "养老保险个人8%企业16%，医疗保险个人2%企业8%，公积金个人企业各12%。基数按上年度月均工资核定。",
+      "must_contain": ["养老", "医疗", "公积金"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_005",
+      "scene": "policy",
+      "question": "公司病假扣薪标准？",
+      "expected_answer_keywords": ["病假", "工资", "扣除", "医院", "证明"],
+      "relevant_doc_ids": ["doc_handbook"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_handbook": 3
+      },
+      "ground_truth_answer": "病假需提供二甲以上医院证明，3天以内不扣薪，3天以上按日工资60%发放。",
+      "must_contain": ["病假", "证明", "医院"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_006",
+      "scene": "policy",
+      "question": "婚假可以休多少天？",
+      "expected_answer_keywords": ["婚假", "天数", "结婚", "申请"],
+      "relevant_doc_ids": ["doc_handbook"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_handbook": 3
+      },
+      "ground_truth_answer": "婚假3天，凭结婚证申请，需提前两周提交申请。",
+      "must_contain": ["婚假", "天"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_007",
+      "scene": "policy",
+      "question": "产假和陪产假政策？",
+      "expected_answer_keywords": ["产假", "陪产假", "天数", "工资"],
+      "relevant_doc_ids": ["doc_handbook"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_handbook": 3
+      },
+      "ground_truth_answer": "产假98天，难产增加15天；陪产假15天。产假期间工资按正常标准发放。",
+      "must_contain": ["产假", "陪产假"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_008",
+      "scene": "policy",
+      "question": "年终奖发放规则？",
+      "expected_answer_keywords": ["年终奖", "绩效", "发放", "月份"],
+      "relevant_doc_ids": ["doc_compensation"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_compensation": 3,
+        "doc_handbook": 1
+      },
+      "ground_truth_answer": "年终奖于每年1月发放，基数=月薪×绩效系数，绩效S级系数2.0，A级1.5，B级1.0，C级0.5。",
+      "must_contain": ["年终奖", "绩效", "发放"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_009",
+      "scene": "policy",
+      "question": "试用期工资怎么算？",
+      "expected_answer_keywords": ["试用期", "工资", "80%", "转正"],
+      "relevant_doc_ids": ["doc_handbook"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_handbook": 3,
+        "doc_compensation": 2
+      },
+      "ground_truth_answer": "试用期工资为转正后工资的80%，试用期最长不超过6个月，转正考核通过后恢复全额工资。",
+      "must_contain": ["试用期", "80%", "转正"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_010",
+      "scene": "policy",
+      "question": "调休假的使用规则？",
+      "expected_answer_keywords": ["调休", "加班", "补休", "有效期"],
+      "relevant_doc_ids": ["doc_handbook"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_handbook": 3
+      },
+      "ground_truth_answer": "调休假由加班产生，1小时加班=1小时调休，有效期3个月，过期自动清零。",
+      "must_contain": ["调休", "加班", "有效期"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_011",
+      "scene": "process",
+      "question": "新员工入职需要办理哪些手续？",
+      "expected_answer_keywords": ["入职", "合同", "身份证", "银行卡", "签"],
+      "relevant_doc_ids": ["doc_onboarding"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_onboarding": 3,
+        "doc_handbook": 1
+      },
+      "ground_truth_answer": "入职需携带身份证原件及复印件、学历证书、银行卡、1寸照片2张，签署劳动合同及保密协议。",
+      "must_contain": ["入职", "合同", "身份证"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_012",
+      "scene": "process",
+      "question": "离职流程是怎样的？",
+      "expected_answer_keywords": ["离职", "申请", "交接", "审批", "证明"],
+      "relevant_doc_ids": ["doc_offboarding"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_offboarding": 3,
+        "doc_handbook": 1
+      },
+      "ground_truth_answer": "离职需提前30天提交书面申请，经部门负责人和HR审批，完成工作交接和资产归还后领取离职证明。",
+      "must_contain": ["离职", "申请", "交接"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_013",
+      "scene": "process",
+      "question": "如何申请转正？",
+      "expected_answer_keywords": ["转正", "申请", "试用期", "评估", "审批"],
+      "relevant_doc_ids": ["doc_onboarding"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_onboarding": 3
+      },
+      "ground_truth_answer": "试用期结束前两周由直属上级发起转正评估，填写转正申请表，经部门负责人和HR审批后正式转正。",
+      "must_contain": ["转正", "申请", "审批"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_014",
+      "scene": "process",
+      "question": "部门调岗需要什么条件？",
+      "expected_answer_keywords": ["调岗", "申请", "部门", "面试", "审批"],
+      "relevant_doc_ids": ["doc_handbook"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_handbook": 3
+      },
+      "ground_truth_answer": "调岗需在本岗位工作满1年，绩效B级以上，经目标部门面试通过后由双方部门负责人审批。",
+      "must_contain": ["调岗", "审批"],
+      "must_not_contain": [],
+      "index": ""
+    },
+    {
+      "id": "eval_015",
+      "scene": "process",
+      "question": "请假审批需要谁批准？",
+      "expected_answer_keywords": ["请假", "审批", "直属", "上级", "天数"],
+      "relevant_doc_ids": ["doc_handbook"],
+      "min_sources": 1,
+      "relevance_judgments": {
+        "doc_handbook": 3
+      },
+      "ground_truth_answer": "请假3天以内由直属上级审批，3-7天需部门负责人审批，7天以上需HR总监审批。",
+      "must_contain": ["请假", "审批", "上级"],
+      "must_not_contain": [],
+      "index": ""
+    }
+  ]
+}
